@@ -23,45 +23,38 @@ var winCombos = [
 
 // functions :
 
-const clickHandler = (t) => {
-	if (b % 2 == 0) {
-		t.innerHTML = "X";
-		X.push(parseInt(t.attributes.key.value));
-		X.sort();
-		console.log(X);
-	} else {
-		t.innerHTML = "O";
-		O.push(parseInt(t.attributes.key.value));
-		O.sort();
-		console.log(O);
+const clickHandler = (e) => {
+	let t = e.target;
+	if (e.target.innerHTML == "") {
+		if (b % 2 == 0) {
+			t.innerHTML = "X";
+			X.push(parseInt(t.attributes.key.value));
+			X.sort();
+		} else {
+			t.innerHTML = "O";
+			O.push(parseInt(t.attributes.key.value));
+			O.sort();
+		}
+		b += 1;
+		checkWinner(b);
 	}
-	b += 1;
-	checkWinner(b);
 };
 
-grid.addEventListener(
-	"click",
-	(e) => {
-		if (e.target.innerHTML == "") {
-			clickHandler(e.target);
-		}
-	},
-	false
-);
+grid.addEventListener("click", clickHandler);
 
 resetButton.addEventListener("click", () => {
-	console.log(boxes);
 	for (let i = 0; i < boxes.length; i++) {
 		boxes[i].innerHTML = "";
 	}
 	X = [];
 	O = [];
 	b = 0;
+
+	grid.addEventListener("click", clickHandler);
 });
 
 const checkWinner = (b) => {
 	var arr = b % 2 ? X : O;
-	console.log(arr);
 
 	for (const i of winCombos) {
 		if (
@@ -79,17 +72,7 @@ const checkWinner = (b) => {
 				scoreO.innerHTML = Owins;
 			}
 
-			grid.removeEventListener(
-				"click",
-				(e) => {
-					if (e.target.innerHTML == "") {
-						clickHandler(e.target);
-					}
-				},
-				false
-			);
-
-			console.log("Game Over, Player : " + w + " Wins.");
+			grid.removeEventListener("click", clickHandler);
 		}
 	}
 };
